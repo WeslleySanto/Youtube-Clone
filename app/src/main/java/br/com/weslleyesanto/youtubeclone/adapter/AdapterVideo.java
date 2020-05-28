@@ -14,14 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.weslleyesanto.youtubeclone.R;
+import br.com.weslleyesanto.youtubeclone.model.Item;
 import br.com.weslleyesanto.youtubeclone.model.Video;
 
 public class AdapterVideo extends RecyclerView.Adapter<AdapterVideo.MyViewHolder> {
 
-    private List<Video> videos = new ArrayList<>();
+    private List<Item> videos = new ArrayList<>();
     private Context context;
 
-    public AdapterVideo(List<Video> videos, Context context) {
+    public AdapterVideo(List<Item> videos, Context context) {
         this.videos = videos;
         this.context = context;
     }
@@ -35,8 +36,9 @@ public class AdapterVideo extends RecyclerView.Adapter<AdapterVideo.MyViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        Video video = videos.get(position);
-        holder.textViewTitulo.setText(video.getTitulo());
+        Item video = videos.get(position);
+        holder.textViewTitulo.setText(video.snippet.title);
+//        holder.textViewTitulo.setText(video.id.videoId);
     }
 
     @Override

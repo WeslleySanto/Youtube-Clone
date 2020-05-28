@@ -23,6 +23,7 @@ import br.com.weslleyesanto.youtubeclone.adapter.AdapterVideo;
 import br.com.weslleyesanto.youtubeclone.api.YoutubeService;
 import br.com.weslleyesanto.youtubeclone.helper.RetrofitConfig;
 import br.com.weslleyesanto.youtubeclone.helper.YoutubeConfig;
+import br.com.weslleyesanto.youtubeclone.model.Item;
 import br.com.weslleyesanto.youtubeclone.model.Resultado;
 import br.com.weslleyesanto.youtubeclone.model.Video;
 import retrofit2.Call;
@@ -36,7 +37,8 @@ public class MainActivity extends Activity {
     private RecyclerView recyclerView;
     private MaterialSearchView searchView;
 
-    private List<Video> videos = new ArrayList<>();
+    private List<Item> videos = new ArrayList<>();
+    private Resultado resultado;
     private AdapterVideo adapterVideo;
 
     //Retrofit
@@ -59,13 +61,8 @@ public class MainActivity extends Activity {
         toolbar.setTitle("Youtube Clone");
         setActionBar(toolbar);
 
-        //Configurar Recyclerview
+        //Recupera Videos
         recuperarVideos();
-        adapterVideo = new AdapterVideo(videos, this);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapterVideo);
-
     }
 
     private void recuperarVideos(){
@@ -81,6 +78,11 @@ public class MainActivity extends Activity {
             @Override
             public void onResponse(Call<Resultado> call, Response<Resultado> response) {
                 Log.d("Resultado", "resultado: " + response.toString());
+                if (response.isSuccessful()){
+                    resultado = response.body();
+                    videos = resultado.items;
+                    configurarRecyclerView();
+                }
             }
 
             @Override
@@ -88,6 +90,13 @@ public class MainActivity extends Activity {
 
             }
         });
+    }
+
+    public void configurarRecyclerView(){
+        adapterVideo = new AdapterVideo(videos, this);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapterVideo);
     }
 
     @Override
